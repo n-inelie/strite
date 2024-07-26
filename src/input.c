@@ -1,6 +1,8 @@
 #include "stage.h"
 #include <ncurses.h>
 
+static size_t cursor_text_pos[2] = {0, 0};
+
 inline void cursor_move(struct cursor *cursor, size_t y, size_t x) {
     cursor->y = y;
     cursor->x = x;
@@ -9,11 +11,12 @@ inline void cursor_move(struct cursor *cursor, size_t y, size_t x) {
 
 int handle_command_mode(struct stage *stage, struct cursor *cursor, int c) {
     (void)stage;
-    addch(':');
+    addch('a');
     CURSOR_MOVE_X(cursor, 1);
 
     if (c == 27) {
         cursor->mode = NORMAL;
+        cursor_move(cursor, cursor_text_pos[0], cursor_text_pos[1]);
     } else {
         CURSOR_MOVE_X(cursor, 1);
     }
@@ -27,11 +30,15 @@ int handle_insert_mode(struct stage *stage, struct cursor *cursor, int c) {
         cursor->mode = NORMAL;
     } else {
         CURSOR_MOVE_X(cursor, 1);
+        cursor_text_pos[0] = cursor->y;
+        cursor_text_pos[1] = cursor->x;
     }
     return CONTINUE;
 }
 
 int handle_normal_mode(struct stage *stage, struct cursor *cursor, int c) {
+    cursor_text_pos[0] = cursor->y;
+    cursor_text_pos[1] = cursor->x;
     switch (c) {
     case 'q':
         // This one is temporary
