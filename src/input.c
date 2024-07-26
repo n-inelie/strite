@@ -11,13 +11,11 @@ inline void cursor_move(struct cursor *cursor, size_t y, size_t x) {
 
 int handle_command_mode(struct stage *stage, struct cursor *cursor, int c) {
     (void)stage;
-    addch('a');
-    CURSOR_MOVE_X(cursor, 1);
-
     if (c == 27) {
         cursor->mode = NORMAL;
         cursor_move(cursor, cursor_text_pos[0], cursor_text_pos[1]);
     } else {
+        addch(c);
         CURSOR_MOVE_X(cursor, 1);
     }
     return CONTINUE;
@@ -68,7 +66,7 @@ int handle_normal_mode(struct stage *stage, struct cursor *cursor, int c) {
         }
         break;
     case 'l':
-        if (cursor->x < stage->max_x) {
+        if (cursor->x < stage->max_x - 1) {
             cursor_move(cursor, cursor->y, cursor->x + 1);
         }
         break;

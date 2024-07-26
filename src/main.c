@@ -22,7 +22,7 @@ int main(void) {
 
     int code;
     do {
-        clear();
+        // clear();
         render_stage(&stage, &cursor);
         c = getch();
         code = handle_input(&stage, &cursor, c);
