@@ -1,5 +1,5 @@
+#include "movement.h"
 #include "stage.h"
-#include <ncurses.h>
 
 static size_t cursor_text_pos[2] = {0, 0};
 
@@ -51,24 +51,20 @@ int handle_normal_mode(struct stage *stage, struct cursor *cursor, int c) {
         cursor->mode = INSERT;
         break;
     case 'j':
-        if (cursor->y < stage->max_y - 3) {
-            cursor_move(cursor, cursor->y + 1, cursor->x);
-        }
+    case KEY_DOWN:
+        move_down(stage, cursor);
         break;
     case 'k':
-        if (cursor->y != 0) {
-            cursor_move(cursor, cursor->y - 1, cursor->x);
-        }
+    case KEY_UP:
+        move_up(stage, cursor);
         break;
     case 'h':
-        if (cursor->x > stage->min_x + stage->line_nr_width + 1) {
-            cursor_move(cursor, cursor->y, cursor->x - 1);
-        }
+    case KEY_LEFT:
+        move_left(stage, cursor);
         break;
     case 'l':
-        if (cursor->x < stage->max_x - 1) {
-            cursor_move(cursor, cursor->y, cursor->x + 1);
-        }
+    case KEY_RIGHT:
+        move_right(stage, cursor);
         break;
     }
     return CONTINUE;

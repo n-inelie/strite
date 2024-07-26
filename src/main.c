@@ -4,6 +4,7 @@
 
 int main(void) {
     initscr();
+    keypad(stdscr, TRUE);
     noecho();
     clear();
 
