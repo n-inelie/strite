@@ -5,11 +5,11 @@
 inline void cursor_move(struct cursor *cursor, size_t y, size_t x) {
     cursor->y = y;
     cursor->x = x;
-    move(y + cursor->stage->min_y,
-         x + cursor->stage->min_x);
+    move(y, x);
 }
 
-void handle_input_insert_mode(struct cursor *cursor, int c) {
+void handle_input_insert_mode(struct stage *stage, struct cursor *cursor, int c) {
+    (void)stage;
     // Escape
     if (c == 27) {
         cursor->mode = NORMAL;
@@ -19,7 +19,8 @@ void handle_input_insert_mode(struct cursor *cursor, int c) {
     }
 }
 
-void handle_input_normal_mode(struct cursor *cursor, int c) {
+void handle_input_normal_mode(struct stage *stage, struct cursor *cursor,
+                              int c) {
     switch (c) {
     case 'q':
         // This one is temporary
@@ -28,13 +29,13 @@ void handle_input_normal_mode(struct cursor *cursor, int c) {
         break;
     case ':':
         cursor->mode = COMMAND;
-        cursor_move(cursor, cursor->stage->max_y, cursor->stage->min_x);
+        cursor_move(cursor, stage->max_y, stage->min_x);
         break;
     case 'i':
         cursor->mode = INSERT;
         break;
     case 'j':
-        if (cursor->y < cursor->stage->max_y - 2) {
+        if (cursor->y < stage->max_y - 2) {
             cursor_move(cursor, cursor->y + 1, cursor->x);
         }
         cursor_move(cursor, cursor->y + 1, cursor->x);
@@ -45,25 +46,25 @@ void handle_input_normal_mode(struct cursor *cursor, int c) {
         }
         break;
     case 'h':
-        if (cursor->x > cursor->stage->min_x + cursor->stage->line_nr_width) {
+        if (cursor->x > stage->min_x + stage->line_nr_width) {
             cursor_move(cursor, cursor->y, cursor->x - 1);
         }
         break;
     case 'l':
-        if (cursor->x < cursor->stage->max_x) {
+        if (cursor->x < stage->max_x) {
             cursor_move(cursor, cursor->y, cursor->x + 1);
         }
         break;
     }
 }
 
-void handle_input(struct cursor *cursor, int c) {
+void handle_input(struct stage *stage, struct cursor *cursor, int c) {
     switch (cursor->mode) {
     case NORMAL:
-        handle_input_normal_mode(cursor, c);
+        handle_input_normal_mode(stage, cursor, c);
         break;
     case INSERT:
-        handle_input_insert_mode(cursor, c);
+        handle_input_insert_mode(stage, cursor, c);
         break;
     case COMMAND:
         // TODO

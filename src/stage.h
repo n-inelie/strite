@@ -15,13 +15,12 @@ struct stage {
 
 struct cursor {
     enum mode mode;
-    struct stage *stage;
-    size_t x;
     size_t y;
+    size_t x;
 };
 
 void render_stage(struct stage *stage, struct cursor *cursor);
-void handle_input(struct cursor *cursor, int c);
+void handle_input(struct stage *stage, struct cursor *cursor, int c);
 void cursor_move(struct cursor *cursor, size_t y, size_t x);
 
 
