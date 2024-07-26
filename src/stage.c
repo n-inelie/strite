@@ -30,22 +30,22 @@ static inline void render_status_bar(struct stage *stage,
 
 static inline void render_text(struct stage *stage, struct cursor *cursor) {
     struct cursor temp_cursor = *cursor;
+    cursor_move(cursor, 0, stage->min_x + stage->line_nr_width);
 
-    char *text = stage->page->text;
+    char **text = stage->page->text;
+    size_t line_count = stage->page->line_count;
 
-    size_t y_offset = 0;
-    size_t x_offset = 0;
-    size_t index = 0;
-    while (index < stage->page->text_len) {
-        cursor_move(cursor, stage->min_y + y_offset,
-                    stage->min_x + stage->line_nr_width + x_offset);
-        x_offset++;
-        if (text[index] == '\n') {
-            y_offset++;
-            x_offset = 0;
+    for (size_t i = 0; i < line_count; ++i) {
+        char *line = text[i];
+        for (size_t j = 0;; ++j) {
+            CURSOR_MOVE_X(cursor, 1);
+            if (line[j] == '\n') {
+                CURSOR_MOVE_X(cursor, -j-1);
+                break;
+            }
+            addch(line[j]);
         }
-        addch(text[index]);
-        index++;
+        CURSOR_MOVE_Y(cursor, 1);
     }
 
     cursor_move(cursor, temp_cursor.y, temp_cursor.x);

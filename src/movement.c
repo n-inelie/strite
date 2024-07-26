@@ -14,7 +14,7 @@ inline void move_up(struct stage *stage, struct cursor *cursor) {
 }
 
 inline void move_left(struct stage *stage, struct cursor *cursor) {
-    if (cursor->x > stage->min_x + stage->line_nr_width + 1) {
+    if (cursor->x > stage->min_x + stage->line_nr_width) {
         cursor_move(cursor, cursor->y, cursor->x - 1);
     }
 }

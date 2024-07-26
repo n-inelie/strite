@@ -8,8 +8,8 @@
 #define EXIT 1
 
 struct page {
-    char *text;
-    size_t text_len;
+    char **text;
+    size_t line_count;
     FILE *f;
     char *file_name;
 };
