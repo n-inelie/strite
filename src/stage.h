@@ -7,6 +7,12 @@
 #define CONTINUE 0
 #define EXIT 1
 
+struct page {
+    char *text;
+    size_t text_len;
+    FILE *f;
+};
+
 struct stage {
     WINDOW *window;
     size_t max_y;
@@ -14,6 +20,7 @@ struct stage {
     size_t min_y;
     size_t min_x;
     size_t line_nr_width;
+    struct page *page;
 };
 
 struct cursor {

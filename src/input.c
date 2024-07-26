@@ -13,7 +13,6 @@ int handle_input_insert_mode(struct stage *stage, struct cursor *cursor, int c) 
     if (c == 27) {
         cursor->mode = NORMAL;
     } else {
-        addch(c);
         cursor_move(cursor, cursor->y, cursor->x + 1);
     }
     return CONTINUE;
@@ -37,7 +36,6 @@ int handle_input_normal_mode(struct stage *stage, struct cursor *cursor,
         if (cursor->y < stage->max_y - 2) {
             cursor_move(cursor, cursor->y + 1, cursor->x);
         }
-        cursor_move(cursor, cursor->y + 1, cursor->x);
         break;
     case 'k':
         if (cursor->y != 0) {
