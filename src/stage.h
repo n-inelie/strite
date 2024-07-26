@@ -4,6 +4,9 @@
 #include <ncurses.h>
 #include "commands.h"
 
+#define CONTINUE 0
+#define EXIT 1
+
 struct stage {
     WINDOW *window;
     size_t max_y;
@@ -20,7 +23,7 @@ struct cursor {
 };
 
 void render_stage(struct stage *stage, struct cursor *cursor);
-void handle_input(struct stage *stage, struct cursor *cursor, int c);
+int handle_input(struct stage *stage, struct cursor *cursor, int c);
 void cursor_move(struct cursor *cursor, size_t y, size_t x);
 
 

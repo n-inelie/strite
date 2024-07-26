@@ -1,6 +1,5 @@
 #include "stage.h"
 #include <ncurses.h>
-#include <stdlib.h>
 
 inline void cursor_move(struct cursor *cursor, size_t y, size_t x) {
     cursor->y = y;
@@ -8,7 +7,7 @@ inline void cursor_move(struct cursor *cursor, size_t y, size_t x) {
     move(y, x);
 }
 
-void handle_input_insert_mode(struct stage *stage, struct cursor *cursor, int c) {
+int handle_input_insert_mode(struct stage *stage, struct cursor *cursor, int c) {
     (void)stage;
     // Escape
     if (c == 27) {
@@ -17,15 +16,15 @@ void handle_input_insert_mode(struct stage *stage, struct cursor *cursor, int c)
         addch(c);
         cursor_move(cursor, cursor->y, cursor->x + 1);
     }
+    return CONTINUE;
 }
 
-void handle_input_normal_mode(struct stage *stage, struct cursor *cursor,
+int handle_input_normal_mode(struct stage *stage, struct cursor *cursor,
                               int c) {
     switch (c) {
     case 'q':
         // This one is temporary
-        clear();
-        exit(EXIT_SUCCESS);
+        return EXIT;
         break;
     case ':':
         cursor->mode = COMMAND;
@@ -56,15 +55,16 @@ void handle_input_normal_mode(struct stage *stage, struct cursor *cursor,
         }
         break;
     }
+    return CONTINUE;
 }
 
-void handle_input(struct stage *stage, struct cursor *cursor, int c) {
+int handle_input(struct stage *stage, struct cursor *cursor, int c) {
     switch (cursor->mode) {
     case NORMAL:
-        handle_input_normal_mode(stage, cursor, c);
+        return handle_input_normal_mode(stage, cursor, c);
         break;
     case INSERT:
-        handle_input_insert_mode(stage, cursor, c);
+        return handle_input_insert_mode(stage, cursor, c);
         break;
     case COMMAND:
         // TODO
@@ -73,4 +73,5 @@ void handle_input(struct stage *stage, struct cursor *cursor, int c) {
         // TODO
         break;
     }
+    return CONTINUE;
 }
