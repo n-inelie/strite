@@ -33,7 +33,7 @@ int handle_input_normal_mode(struct stage *stage, struct cursor *cursor,
         cursor->mode = INSERT;
         break;
     case 'j':
-        if (cursor->y < stage->max_y - 2) {
+        if (cursor->y < stage->max_y - 3) {
             cursor_move(cursor, cursor->y + 1, cursor->x);
         }
         break;
@@ -43,7 +43,7 @@ int handle_input_normal_mode(struct stage *stage, struct cursor *cursor,
         }
         break;
     case 'h':
-        if (cursor->x > stage->min_x + stage->line_nr_width) {
+        if (cursor->x > stage->min_x + stage->line_nr_width + 1) {
             cursor_move(cursor, cursor->y, cursor->x - 1);
         }
         break;
