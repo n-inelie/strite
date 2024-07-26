@@ -8,7 +8,7 @@ int main(void) {
 
     int c;
     struct stage stage = {stdscr, LINES, COLS, 0, 0, 4};
-    struct cursor cursor = {NORMAL, &stage, 0, 0};
+    struct cursor cursor = {NORMAL, &stage, stage.min_y, stage.min_x + stage.line_nr_width};
     do {
         render_stage(&stage, &cursor);
         c = getch();

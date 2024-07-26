@@ -46,8 +46,7 @@ void handle_input_normal_mode(struct cursor *cursor, int c) {
         break;
     case 'h':
         if (cursor->x > cursor->stage->min_x + cursor->stage->line_nr_width) {
-            cursor->x -= 1;
-            cursor_move(cursor, cursor->y + 1, cursor->x);
+            cursor_move(cursor, cursor->y, cursor->x - 1);
         }
         break;
     case 'l':
