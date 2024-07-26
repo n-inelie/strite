@@ -15,13 +15,14 @@ int main(void) {
     int bytes_read = fread(buffer, sizeof(char), sizeof(buffer), f);
 
     int c;
-    struct page page = {buffer, bytes_read, f};
+    struct page page = {buffer, bytes_read, f, "sample.txt"};
     struct stage stage = {stdscr, LINES, COLS, 0, 0, 4, &page};
     struct cursor cursor = {NORMAL, stage.min_y,
                             stage.min_x + stage.line_nr_width};
 
     int code;
     do {
+        clear();
         render_stage(&stage, &cursor);
         c = getch();
         code = handle_input(&stage, &cursor, c);

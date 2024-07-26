@@ -11,6 +11,7 @@ struct page {
     char *text;
     size_t text_len;
     FILE *f;
+    char *file_name;
 };
 
 struct stage {
@@ -33,5 +34,7 @@ void render_stage(struct stage *stage, struct cursor *cursor);
 int handle_input(struct stage *stage, struct cursor *cursor, int c);
 void cursor_move(struct cursor *cursor, size_t y, size_t x);
 
+#define CURSOR_MOVE_X(cursor, delta_x) cursor_move(cursor, cursor->y, cursor->x + delta_x)
+#define CURSOR_MOVE_Y(cursor, delta_y) cursor_move(cursor, cursor->y + delta_y, cursor->x)
 
 #endif

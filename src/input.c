@@ -7,19 +7,31 @@ inline void cursor_move(struct cursor *cursor, size_t y, size_t x) {
     move(y, x);
 }
 
-int handle_input_insert_mode(struct stage *stage, struct cursor *cursor, int c) {
+int handle_command_mode(struct stage *stage, struct cursor *cursor, int c) {
+    (void)stage;
+    addch(':');
+    CURSOR_MOVE_X(cursor, 1);
+
+    if (c == 27) {
+        cursor->mode = NORMAL;
+    } else {
+        CURSOR_MOVE_X(cursor, 1);
+    }
+    return CONTINUE;
+}
+
+int handle_insert_mode(struct stage *stage, struct cursor *cursor, int c) {
     (void)stage;
     // Escape
     if (c == 27) {
         cursor->mode = NORMAL;
     } else {
-        cursor_move(cursor, cursor->y, cursor->x + 1);
+        CURSOR_MOVE_X(cursor, 1);
     }
     return CONTINUE;
 }
 
-int handle_input_normal_mode(struct stage *stage, struct cursor *cursor,
-                              int c) {
+int handle_normal_mode(struct stage *stage, struct cursor *cursor, int c) {
     switch (c) {
     case 'q':
         // This one is temporary
@@ -27,7 +39,8 @@ int handle_input_normal_mode(struct stage *stage, struct cursor *cursor,
         break;
     case ':':
         cursor->mode = COMMAND;
-        cursor_move(cursor, stage->max_y, stage->min_x);
+        cursor_move(cursor, stage->max_y - 1, stage->min_x);
+        handle_command_mode(stage, cursor, c);
         break;
     case 'i':
         cursor->mode = INSERT;
@@ -59,13 +72,13 @@ int handle_input_normal_mode(struct stage *stage, struct cursor *cursor,
 int handle_input(struct stage *stage, struct cursor *cursor, int c) {
     switch (cursor->mode) {
     case NORMAL:
-        return handle_input_normal_mode(stage, cursor, c);
+        return handle_normal_mode(stage, cursor, c);
         break;
     case INSERT:
-        return handle_input_insert_mode(stage, cursor, c);
+        return handle_insert_mode(stage, cursor, c);
         break;
     case COMMAND:
-        // TODO
+        return handle_command_mode(stage, cursor, c);
         break;
     case SELECT:
         // TODO
