@@ -9,7 +9,7 @@ $(shell mkdir -p $(BUILD_DIR))
 CC := clang
 C_FLAGS := -Wall -Werror -Wextra -Wpedantic -std=c23
 INCLUDE_FLAGS := -I$(INCLUDE_DIR)
-LIB_FLAGS := -lm -lncurses
+LIB_FLAGS := -lm -lncurses -L.
 
 sources := $(wildcard $(SRC_DIR)/*.c)
 objects := $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o, $(sources))
